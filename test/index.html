@@ -1,5 +1,59 @@
 <html>
-  <body>
-    <h1>Hello world</h1>
-  </body>
+
+<head>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <style>
+    </style>
+</head>
+
+
+<body>
+    <input id="search" onchange="submit();"> </input>
+    <div id="results">
+        Results:
+        <br>
+    </div>
+    <script>
+        var search_results;
+        var output = "";
+        var show_json;
+
+        function submit() {
+            const api_url = 'https://api.jikan.moe/v3/search/anime?q=Fate/Zero&page=1';
+            var anime_name = document.getElementById('search');
+    console.log("This is the name of the anime I just typed " + anime_name.value);
+
+    const response = fetch(api_url)
+    .then(response => response.json())
+    .then(data => {
+        var id = data.results[0].mal_id;
+
+        ep_url = 'https://api.jikan.moe/v3/anime/' + id + '/episodes';
+        const response_2 = fetch(ep_url)
+        .then(response_2 => response_2.json())
+        .then(data_2 => {
+            console.log(data_2);
+        })
+    });
+        }
+
+        function info(mal_id) {
+            let req = new Request("https://api.jikan.moe/v3/anime/" + mal_id);
+            fetch(req)
+                .then(response => {
+                    return response.json();
+                })
+                .then(data => {
+                    show_json = data;
+                    document.getElementById("results").innerHTML = "<img src='" + show_json.image_url + "' width = 256 height = 256>";
+                    document.getElementById("results").innerHTML += show_json.synopsis + "<br>";
+                    document.getElementById("results").innerHTML += show_json.title_english + " is available at:<br>";
+
+                })
+        }
+
+    </script>
+
+</body>
+
 </html>
